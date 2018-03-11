@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import re
 
+#read data into an array
 tweets_data_path = './twitter_data.txt'
 
 tweets_data = []
@@ -16,12 +17,14 @@ for line in tweets_file:
 
 #print len(tweets_data)
 
+#structure the tweets data into a pandas DataFrame
 tweets = pd.DataFrame()
 
 tweets['text'] = map(lambda tweet: tweet['text'], tweets_data)
 tweets['lang'] = map(lambda tweet: tweet['lang'], tweets_data)
 tweets['country'] = map(lambda tweet: tweet['place']['country'] if tweet['place'] != None else None, tweets_data)
 
+#Top 5 languages in which the tweets were written
 tweets_by_lang = tweets['lang'].value_counts()
 
 fig, ax = plt.subplots()
@@ -32,6 +35,7 @@ ax.set_ylabel('Number of tweets' , fontsize=15)
 ax.set_title('Top 5 languages', fontsize=15, fontweight='bold')
 tweets_by_lang[:5].plot(ax=ax, kind='bar', color='red')
 
+#Top 5 countries from which the tweets were sent
 tweets_by_country = tweets['country'].value_counts()
 
 fig, ax = plt.subplots()
@@ -43,7 +47,7 @@ ax.set_title('Top 5 countries', fontsize=15, fontweight='bold')
 tweets_by_country[:5].plot(ax=ax, kind='bar', color='blue')
 
 
-
+#return true if a word is found in text
 def word_in_text(word, text):
     word = word.lower()
     text = text.lower()
@@ -60,6 +64,7 @@ print tweets['python'].value_counts()[True]
 print tweets['javascript'].value_counts()[True]
 print tweets['ruby'].value_counts()[True]
 
+#compare the row data of three programming languages
 prg_langs = ['python', 'javascript', 'ruby']
 tweets_by_prg_lang = [tweets['python'].value_counts()[True], tweets['javascript'].value_counts()[True], tweets['ruby'].value_counts()[True]]
 
@@ -75,6 +80,7 @@ ax.set_xticks([p + 0.4 * width for p in x_pos])
 ax.set_xticklabels(prg_langs)
 plt.grid()
 
+#Targeting relevant tweets
 tweets['programming'] = tweets['text'].apply(lambda tweet: word_in_text('programming', tweet))
 tweets['tutorial'] = tweets['text'].apply(lambda tweet: word_in_text('tutorial', tweet))
 
@@ -88,6 +94,7 @@ print tweets[tweets['relevant'] == True]['python'].value_counts()[True]
 print tweets[tweets['relevant'] == True]['javascript'].value_counts()[True]
 print tweets[tweets['relevant'] == True]['ruby'].value_counts()[True]
 
+#Compare the popularity of the programming languages
 tweets_by_prg_lang = [tweets[tweets['relevant'] == True]['python'].value_counts()[True], 
                       tweets[tweets['relevant'] == True]['javascript'].value_counts()[True], 
                       tweets[tweets['relevant'] == True]['ruby'].value_counts()[True]]
@@ -101,6 +108,7 @@ ax.set_xticks([p + 0.4 * width for p in x_pos])
 ax.set_xticklabels(prg_langs)
 plt.grid()
 
+#Extracting links from the relevants tweets
 def extract_link(text):
     regex = r'https?://[^\s<>"]+|www\.[^\s<>"]+'
     match = re.search(regex, text)
