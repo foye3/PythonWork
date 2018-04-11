@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import codecs
 
-# get top 250 famours movies on douban.com
+# get hottest comments of Ready Player One on douban.com
 
 download_url = 'https://movie.douban.com/subject/4920389/comments'
 url_param = '?sort=new_score&status=P'
@@ -23,6 +23,7 @@ def download_page(url):
 def parse_html(html):
     #create a BeautifulSoup object
     soup = BeautifulSoup(html,'html.parser')
+    
     comment_list_soup = soup.find('div', attrs={'class': 'mod-bd'})
 
     comment_list = []
@@ -56,7 +57,7 @@ def main():
     url = download_url + url_param
     html = download_page(url)
     parse_html(html)
-    with codecs.open('comments', 'wb', encoding='utf-8') as fp:
+    with codecs.open('ReadyPlayerOneComments', 'wb', encoding='utf-8') as fp:
         while url:
             html = download_page(url)
             comments, url = parse_html(html)
