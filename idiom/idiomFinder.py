@@ -6,7 +6,7 @@ PINYIN = False
 TONE = False
 
 def idiomFinder(first_character):
-  with open('idiom.json') as f:
+  with open('idiom_basic.json') as f:
     data = json.load(f)
   for idiom in data:
     if TONE:
